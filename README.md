@@ -1,2 +1,3 @@
-# filar
-A really good fileReader API wrapper
+# Filar
+
+A clean, pure javascript FileReader API wrapper.
