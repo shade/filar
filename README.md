@@ -21,4 +21,5 @@ Example script:
 	}); 
 	
 	//Success Outputs {header:'data:image',data:[Array 7]}
+	
 ```
