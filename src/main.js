@@ -36,21 +36,32 @@ Filar.prototype.attachImage	=	function(element,callbacks){
 }
 
 Filar.prototype.setInput	=	function(input,element){
-	var _elStyle	=	window.getComputedStyle(element);
 //	make sure the input has the basic properties
 	input.type	=	'file';
 //	make the input exactly the same as the element
 	input.style.opacity	=	'0';
 	input.style.position	=	'absolute';
-	input.style.cursor	=	_elStyle.cursor;
-	input.style.height	=	_elStyle.height;
-	input.style.width		=	_elStyle.width;
-	input.style.top		=	_elStyle.top;
-	input.style.left		=	_elStyle.left;
-	input.style.margin		=	_elStyle.margin;
-	input.style.borderRadius	=	_elStyle.borderRadius;
+	input.style.cursor	=	this.getStyle(element,'cursor');
+	input.style.height	=	this.getStyle(element,'height');
+	input.style.width		=	this.getStyle(element,'width');
+	input.style.top		=	this.getStyle(element,'top');
+	input.style.left		=	this.getStyle(element,'left');
+	input.style.margin		=	this.getStyle(element,'margin');
+	input.style.borderRadius	=	this.getStyle(element,'borderRadius');
 	input.style.zIndex	=	10000;
 			
 	console.log(element,input);
 	element.parentNode.insertBefore(input,element);
+}
+
+
+Filar.prototype.getStyle	=	function(el,styleProp){
+//	You can only get percentage CSS values when the element is not displayed
+	el.style.display	=	'none';
+    if (el.currentStyle)
+        var y = el.currentStyle[styleProp];
+    else if (window.getComputedStyle)
+        var y = document.defaultView.getComputedStyle(el,null).getPropertyValue(styleProp);
+	el.style.display	=	'block';
+    return y;
 }
