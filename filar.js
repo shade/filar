@@ -50,8 +50,7 @@ Filar.prototype.setInput	=	function(input,element){
 	input.style.margin		=	this.getStyle(element,'margin');
 	input.style.borderRadius	=	this.getStyle(element,'borderRadius');
 	input.style.zIndex	=	10000;
-			
-	console.log(element,input);
+
 	element.parentNode.insertBefore(input,element);
 }
 
@@ -66,4 +65,4 @@ Filar.prototype.getStyle	=	function(el,styleProp){
 	el.style.display	=	'block';
     return y;
 }
-})(window)
+})(window);

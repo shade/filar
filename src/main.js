@@ -4,16 +4,20 @@
 	Date:	Jan 17, 2016
 */
 
-var Filar	=	function(){
-	
+//Every 3 bytes is encoded as 4 bytes of base64
+//Thus, the chunk size must be a multiple of 4
+var CHUNK_SIZE	=	3600;
+var Filar	=	function(options){
+	this.maxSize	=	options.maxSize||10E6	//set the default max size as 10MB
 };
 
-Filar.prototype.attachImage	=	function(element,callbacks){
+Filar.prototype.attachImage	=	function(id,callbacks){
 	
+	var _element	=	document.getElementById(id);
 //	Create the file input 
 	var _input	=	document.createElement('input');
 //	Add the image to the element
-	this.setInput(_input,element);
+	this.setInput(_input,_element);
 	
 //		Read the uploaded image and send to callback
 	_input.addEventListener('change',function(){
@@ -23,6 +27,7 @@ Filar.prototype.attachImage	=	function(element,callbacks){
 			var _reader	=	new FileReader();
 			
 			_reader.onload	=	function(e){
+				console.log(e.target);
 				callbacks.done&&callbacks.done(e.target.result);
 			}
 			
@@ -31,6 +36,36 @@ Filar.prototype.attachImage	=	function(element,callbacks){
 //			Tell the user it's not a real image
 			callbacks.error&&callbacks.error({code:1,error:'Not Image'});
 		}
+	});
+	
+}
+
+Filar.prototype.attachFile	=	function(id,callbacks){
+	var _this	=	this;
+	
+	var _element	=	document.getElementById(id);
+//	Create the file input 
+	var _input	=	document.createElement('input');
+//	Add the image to the element
+	this.setInput(_input,_element);
+	
+//		Read the uploaded image and send to callback
+	_input.addEventListener('change',function(){
+		
+		var _file	=	_input.files[0];
+		var _reader	=	new FileReader();
+
+		_reader.onload	=	function(e){
+				console.log(_file);
+			
+			//Return a proper chunked version to the user
+			callbacks.done&&callbacks.done(
+				_this.chunk(e.target.result)
+			);
+		}
+
+		_reader.readAsDataURL(_file);
+		
 	});
 	
 }
@@ -64,4 +99,36 @@ Filar.prototype.getStyle	=	function(el,styleProp){
         var y = document.defaultView.getComputedStyle(el,null).getPropertyValue(styleProp);
 	el.style.display	=	'block';
     return y;
+}
+
+Filar.prototype.chunk	=	function(base64){
+	var _chunkData	=	{
+		header:'',
+		data:[]
+	};
+	var	_numChunks	=	parseInt(base64.length/CHUNK_SIZE);
+	
+	
+	//Since this data is like data:;base64,jehr7g839 blah blah. 
+	//The header is data:;base64
+	_chunkData.header	=	base64.split(',')[0];
+	//this is the actual data 8utifdhgfdouaw8e
+	var _base64Raw	=	base64.split(',')[1];
+	
+	
+	//get rid of this if the chunk size is bigger than the string itself
+	if(_numChunks===0){
+		_chunkData.data	=	[base64];
+		return _chunkData;		
+	}
+	
+	for(var i = 0;i<_numChunks;i++){
+		_chunkData.data.push(
+			_base64Raw.substr(
+				(i*CHUNK_SIZE),	//start at the chunk
+				CHUNK_SIZE	// It's only as big as the chunk, substr will reconcile overflow.
+			)
+		);
+	}
+	return _chunkData;
 }
