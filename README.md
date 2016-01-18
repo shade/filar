@@ -10,7 +10,7 @@ Example HTML:
 Example script:
 ```javascript
 	var filar	=	new Filar();
-	filar.attachImage(document.getElementById('My_upload_image_icon'),{
+	filar.attachImage('My_upload_image_icon',{
   	done:function(data){
 			console.log(data);
 		},
@@ -20,5 +20,5 @@ Example script:
 		}
 	}); 
 	
-	//Success Outputs 'data:image84urthgjfoeh4...';
+	//Success Outputs {header:'data:image',data:[Array 7]}
 ```
