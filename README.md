@@ -6,7 +6,7 @@ A clean, pure javascript FileReader API wrapper.
 Example HTML:
 ```HTML
 	<div id="My_upload_image_icon"></div>
-
+```
 Example script:
 ```javascript
 	var filar	=	new Filar();
@@ -21,3 +21,4 @@ Example script:
 	}); 
 	
 	//Success Outputs 'data:image84urthgjfoeh4...';
+```
