@@ -1,4 +1,10 @@
-(function(window){/*
+// ==ClosureCompiler==
+// @output_file_name default.js
+// @compilation_level SIMPLE_OPTIMIZATIONS
+// ==/ClosureCompiler==
+
+(function(window){
+/*
 	Filar v0.0.1
 	author: Joseph Thomas
 	Date:	Jan 17, 2016
@@ -56,11 +62,9 @@ Filar.prototype.attachFile	=	function(id,callbacks){
 		var _reader	=	new FileReader();
 
 		_reader.onload	=	function(e){
-				console.log(_file);
-			
 			//Return a proper chunked version to the user
 			callbacks.done&&callbacks.done(
-				_this.chunk(e.target.result)
+				_this.chunk(_file,e.target.result)
 			);
 		}
 
@@ -81,6 +85,8 @@ Filar.prototype.setInput	=	function(input,element){
 	input.style.width		=	this.getStyle(element,'width');
 	input.style.top		=	this.getStyle(element,'top');
 	input.style.left		=	this.getStyle(element,'left');
+	input.style.bottom		=	this.getStyle(element,'bottom');
+	input.style.right		=	this.getStyle(element,'right');
 	input.style.margin		=	this.getStyle(element,'margin');
 	input.style.borderRadius	=	this.getStyle(element,'borderRadius');
 	input.style.zIndex	=	10000;
@@ -101,21 +107,38 @@ Filar.prototype.getStyle	=	function(el,styleProp){
     return y;
 }
 
-Filar.prototype.chunk	=	function(base64){
+Filar.prototype.chunk	=	function(file,base64){
+	var	_headerData	=	{
+		name:file.name,
+		size:file.size,
+		chunkSize:CHUNK_SIZE,
+		type:file.type,
+		ext:''
+	};
+	
 	var _chunkData	=	{
-		header:'',
+		header:_headerData,	//Because objects are passed by reference
 		data:[]
 	};
-	var	_numChunks	=	parseInt(base64.length/CHUNK_SIZE);
 	
+	
+	//The only place the extension is in the name
+	var _nameArray	=	file.name.split('.');
+	if(_nameArray.length>1){
+		_headerData.ext	=	_nameArray[_nameArray.length-1];
+	}
+	_headerData.name	=	_nameArray[0];
 	
 	//Since this data is like data:;base64,jehr7g839 blah blah. 
 	//The header is data:;base64
-	_chunkData.header	=	base64.split(',')[0];
+	_chunkData.header	=	_headerData;
 	//this is the actual data 8utifdhgfdouaw8e
 	var _base64Raw	=	base64.split(',')[1];
 	
 	
+	
+	
+	var	_numChunks	=	parseInt(base64.length/CHUNK_SIZE);
 	//get rid of this if the chunk size is bigger than the string itself
 	if(_numChunks===0){
 		_chunkData.data	=	[base64];
@@ -132,5 +155,5 @@ Filar.prototype.chunk	=	function(base64){
 	}
 	return _chunkData;
 }
-window.Filar	=	Filar;
+window.Filar=Filar
 })(window);
