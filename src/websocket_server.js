@@ -11,6 +11,11 @@ var FILES_DIR	=	'/public/files/';
 io.on('connection',function(socket){
 	
 	
+	socket.on('chunk',function(data){
+	
+	}
+	
+	
 	socket.on('fileHeader',function(data){
 		 
 		//Because we don't someone trying to upload 1000 files at once
@@ -28,10 +33,10 @@ io.on('connection',function(socket){
 			return res.send('[FILE_TOO_SMALL]');
 		
 		
-		var token	=	crypto.randomBytes(10).toString('hex');
+		var token	=	crypto.randomBytes(9).toString('base64').replace(/\//g,'_');
 		//In case there are any collisions
 		while(global.files[token])
-			token	=	crypto.randomBytes(10).toString('hex');
+			token	=	crypto.randomBytes(9).toString('base64').replace(/\//g,'_');
 		
 		var _fileLocation	=	FILES_DIR+token;
 		//This lets other recievers append and upload the file properly
