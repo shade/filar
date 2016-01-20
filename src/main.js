@@ -104,11 +104,12 @@ Filar.prototype.getStyle	=	function(el,styleProp){
 
 Filar.prototype.chunk	=	function(file,base64){
 	var	_headerData	=	{
-		name:file.name,
-		size:file.size,
+		fileName:file.name,
+		fileSize:file.size,
 		chunkSize:CHUNK_SIZE,
-		type:file.type,
-		ext:''
+		chunkAmount:0,
+		fileType:file.type,
+		fileExtension:''
 	};
 	
 	var _chunkData	=	{
@@ -119,14 +120,12 @@ Filar.prototype.chunk	=	function(file,base64){
 	
 	//The only place the extension is in the name
 	var _nameArray	=	file.name.split('.');
+	//Incase the file has no extension
 	if(_nameArray.length>1){
-		_headerData.ext	=	_nameArray[_nameArray.length-1];
+		_headerData.fileExtension	=	_nameArray[_nameArray.length-1];
 	}
 	_headerData.name	=	_nameArray[0];
 	
-	//Since this data is like data:;base64,jehr7g839 blah blah. 
-	//The header is data:;base64
-	_chunkData.header	=	_headerData;
 	//this is the actual data 8utifdhgfdouaw8e
 	var _base64Raw	=	base64.split(',')[1];
 	
@@ -134,6 +133,7 @@ Filar.prototype.chunk	=	function(file,base64){
 	
 	
 	var	_numChunks	=	parseInt(base64.length/CHUNK_SIZE);
+	_headerData.chunkAmount	=	_numChunks;
 	//get rid of this if the chunk size is bigger than the string itself
 	if(_numChunks===0){
 		_chunkData.data	=	[base64];
