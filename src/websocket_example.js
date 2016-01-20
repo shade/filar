@@ -19,10 +19,9 @@ socket.on('fileAnswer',function(res){
 	//needs error handling
 	if(res.error!=='none'||res.token==file.token)
 		return;
-	
 	//If that was the last chunk
-	if(file.number.length===++file.number){
-	
+	if(file.number.length===++file.number){	
 	}
-		
 });
+
+
