@@ -12,6 +12,8 @@ var FILES_DIR	=	'/public/files/';
 
 io.on('connection',function(socket){
 	
+	socket.on('msg');
+	socket.on('img');
 	
 	socket.on('chunk',function(data){
 		var file	=	global.files[data.token];
