@@ -1,25 +1,25 @@
 # Filar
 
-A clean, pure javascript FileReader API wrapper.
+An easy to use, clean, pure javascript FileReader API wrapper.
 
-
-Example HTML:
+## How to use
+Add an icon to upload images to your HTML
 ```HTML
-	<div id="My_upload_image_icon"></div>
+	<html>
+		<!--- This looks like a camera --->
+		<div id="camerIcon"></div>	
+		<script src="filar.min.js">
+	</html>
 ```
-Example script:
+
+Attach the filar object to it
 ```javascript
-	var filar	=	new Filar();
-	filar.attachImage('My_upload_image_icon',{
-  	done:function(data){
+	var	filar	=	new Filar();
+	filar.attachImage('cameraIcon',{
+		done:function(data){
 			console.log(data);
-		},
-		error:function(err){
-			//Incase it's not an image
-			if(err.code===1) alert("Dude, that's not an Image"); 
 		}
-	}); 
-	
-	//Success Outputs {header:'data:image',data:[Array 7]}
-	
+	});
+	//Success Outputs {full:"823uywerhfjdkg...",header:'data:image',data:[Array 7]}
 ```
+##API
