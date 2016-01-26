@@ -40,7 +40,7 @@ function Filar(options){
 */
 
 Filar.prototype.attachImage	=	function(id,callbacks){
-
+	var _this	=	this;
 	var _element	=	document.getElementById(id);
 
 	//The input is set to visible and set in front of the element. 
@@ -50,17 +50,23 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 
 	//When something changes, it means someone's tryna upload something
 	_input.addEventListener('change',function(){
+		
 		//This is not a multifile uploader
 		var _file	=	_input.files[0];
-		if(_file.type.match('image.*')){ /*Make sure it's an image*/
+		//And, this input is for images only!
+		if(_file.type.match('image.*')){
 			
+			//Create a reader
 			var _reader	=	new FileReader();
-			
+			//The reader has finished reading the files
 			_reader.onload	=	function(e){
-				console.log(e.target);
-				callbacks.done&&callbacks.done(e.target.result);
+				
+				console.log(_this.chunk(_file,e));
+				
+				//callbacks.done&&callbacks.done(e.target.result);
+				
 			}
-			
+			//Reader reads the file
 			_reader.readAsDataURL(_file);
 		}else{
 //			Tell the user it's not a real image
