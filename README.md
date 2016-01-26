@@ -7,7 +7,7 @@ Add an icon to upload images to your HTML
 ```HTML
 	<html>
 		<!-- This looks like a camera -->
-		<div id="camerIcon"></div>	
+		<div id="cameraIcon"></div>	
 		<script src="filar.min.js">
 	</html>
 ```
@@ -23,3 +23,8 @@ Attach the filar object to it
 	//Success Outputs {full:"823uywerhfjdkg...",header:'data:image',data:[Array 7]}
 ```
 ##API
+
+###Filar()
+Filar is the basic file object, you can attach image and file uploaders to it.
+
+###Filar.attachImage()
