@@ -6,7 +6,11 @@
 
 
 
+//Every 3 bytes is encoded as 4 bytes of base64
+//Thus, the chunk size must be a multiple of 4
+	
 var CHUNK_SIZE	=	3600;
+
 
 /*
 *	Filar Constructor
@@ -31,37 +35,22 @@ function Filar(options){
 *	@param	{Function}	callback	-	the callback
 *		@param	{JSON Object}	data
 *			@key	{String}	full	-	the full amount of base64 for resiszing
-*			@key	{JSON Object}	header	-	a header to upload it to the server
+*			@key	{JSON Object}	header	-	a header to upload it to the server (see the objectfor more info)
 *			@key	{Array}	chunks	-	a bunch of chunks
 */
 
-
-
-
 Filar.prototype.attachImage	=	function(id,callbacks){
 
-
-
-
-
-
-
-
-
-
-
-
-//Every 3 bytes is encoded as 4 bytes of base64
-//Thus, the chunk size must be a multiple of 4
-	
 	var _element	=	document.getElementById(id);
-//	Create the file input 
+
+	//The input is set to visible and set in front of the element. 
+	//So, people beleieve they're clicking on an image
 	var _input	=	document.createElement('input');
-//	Add the image to the element
 	this.setInput(_input,_element);
-	
-//		Read the uploaded image and send to callback
+
+	//When something changes, it means someone's tryna upload something
 	_input.addEventListener('change',function(){
+		//This is not a multifile uploader
 		var _file	=	_input.files[0];
 		if(_file.type.match('image.*')){ /*Make sure it's an image*/
 			
@@ -78,6 +67,17 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 			callbacks.error&&callbacks.error({code:1,error:'Not Image'});
 		}
 	});
+
+
+
+
+
+
+
+		
+//	Add the image to the element
+	
+//		Read the uploaded image and send to callback
 	
 }
 
@@ -110,9 +110,11 @@ Filar.prototype.attachFile	=	function(id,callbacks){
 }
 
 Filar.prototype.setInput	=	function(input,element){
-//	make sure the input has the basic properties
+	//	make sure the input has the basic properties
 	input.type	=	'file';
-//	make the input exactly the same as the element
+	input.accept	=	"image/*";
+	
+	//	make the input exactly the same as the element
 	input.style.opacity	=	'0';
 	input.style.position	=	'absolute';
 	input.style.cursor	=	this.getStyle(element,'cursor');
