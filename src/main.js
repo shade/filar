@@ -61,7 +61,7 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 			//The reader has finished reading the files
 			_reader.onload	=	function(e){
 				
-				console.log(_this.chunk(_file,e));
+				console.log(_this.chunk(_file,e.target.result	));
 				
 				//callbacks.done&&callbacks.done(e.target.result);
 				
@@ -74,45 +74,6 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 		}
 	});
 
-
-
-
-
-
-
-		
-//	Add the image to the element
-	
-//		Read the uploaded image and send to callback
-	
-}
-
-Filar.prototype.attachFile	=	function(id,callbacks){
-	var _this	=	this;
-	
-	var _element	=	document.getElementById(id);
-//	Create the file input 
-	var _input	=	document.createElement('input');
-//	Add the image to the element
-	this.setInput(_input,_element);
-	
-//		Read the uploaded image and send to callback
-	_input.addEventListener('change',function(){
-		
-		var _file	=	_input.files[0];
-		var _reader	=	new FileReader();
-
-		_reader.onload	=	function(e){
-			//Return a proper chunked version to the user
-			callbacks.done&&callbacks.done(
-				_this.chunk(_file,e.target.result)
-			);
-		}
-
-		_reader.readAsDataURL(_file);
-		
-	});
-	
 }
 
 Filar.prototype.setInput	=	function(input,element){
@@ -120,37 +81,28 @@ Filar.prototype.setInput	=	function(input,element){
 	input.type	=	'file';
 	input.accept	=	"image/*";
 	
+	element.style.display	=	'none';	//this way any display based properties are in their % form
 	//	make the input exactly the same as the element
+	var _eStyle	=		window.getComputedStyle(element).cssText;
+	input.style.cssText	=	_eStyle;
+	element.style.display	=	'block';	//Look, nothing happened
+	input.style.display	=	'block';	//Hah, we also copied the display properties by accident
+	
+	//Now make sure it stands out, but is invisible
 	input.style.opacity	=	'0';
-	input.style.position	=	'absolute';
-	input.style.cursor	=	this.getStyle(element,'cursor');
-	input.style.height	=	this.getStyle(element,'height');
-	input.style.width		=	this.getStyle(element,'width');
-	input.style.top		=	this.getStyle(element,'top');
-	input.style.left		=	this.getStyle(element,'left');
-	input.style.bottom		=	this.getStyle(element,'bottom');
-	input.style.right		=	this.getStyle(element,'right');
-	input.style.margin		=	this.getStyle(element,'margin');
-	input.style.borderRadius	=	this.getStyle(element,'borderRadius');
 	input.style.zIndex	=	10000;
 			
-	console.log(element,input);
 	element.parentNode.insertBefore(input,element);
 }
 
 
-Filar.prototype.getStyle	=	function(el,styleProp){
-//	You can only get percentage CSS values when the element is not displayed
-	el.style.display	=	'none';
-    if (el.currentStyle)
-        var y = el.currentStyle[styleProp];
-    else if (window.getComputedStyle)
-        var y = document.defaultView.getComputedStyle(el,null).getPropertyValue(styleProp);
-	el.style.display	=	'block';
-    return y;
-}
+
 
 Filar.prototype.chunk	=	function(file,base64){
+	
+	//We don't want that weird part from the beginning
+	base64	=	base64.split(',')[1];
+	
 	var	_headerData	=	{
 		fileName:file.name,
 		fileSize:file.size,
@@ -161,40 +113,38 @@ Filar.prototype.chunk	=	function(file,base64){
 	};
 	
 	var _chunkData	=	{
-		header:_headerData,	//Because objects are passed by reference
-		data:[]
+		header	:	_headerData,	//Because objects are passed by reference
+		full	:	base64,
+		data	:	[]
 	};
 	
-	
-	//The only place the extension is in the name
-	var _nameArray	=	file.name.split('.');
-	//Incase the file has no extension
-	if(_nameArray.length>1){
-		_headerData.fileExtension	=	_nameArray[_nameArray.length-1];
+	if(_headerData.fileName.split('.').length>1){
+		_headerData.fileExtension	=	_headerData.fileName.split('.').pop();
 	}
-	_headerData.name	=	_nameArray[0];
-	
-	//this is the actual data 8utifdhgfdouaw8e
-	var _base64Raw	=	base64.split(',')[1];
-	
-	
-	
-	
-	var	_numChunks	=	parseInt(base64.length/CHUNK_SIZE);
-	_headerData.chunkAmount	=	_numChunks;
-	//get rid of this if the chunk size is bigger than the string itself
-	if(_numChunks===0){
+
+	if(base64<=CHUNK_SIZE){
 		_chunkData.data	=	[base64];
-		return _chunkData;		
+		return _chunkData;
 	}
 	
-	for(var i = 0;i<_numChunks;i++){
-		_chunkData.data.push(
-			_base64Raw.substr(
-				(i*CHUNK_SIZE),	//start at the chunk
-				CHUNK_SIZE	// It's only as big as the chunk, substr will reconcile overflow.
-			)
-		);
-	}
+	_chunkData.data	=	chunkString(base64,CHUNK_SIZE);
+	_headerData.chunkAmount	=	_chunkData.data.length;
+	
 	return _chunkData;
+}
+
+
+
+function chunkString(str, len) {
+  var _size = Math.ceil(str.length/len),
+      _ret  = new Array(_size),
+      _offset
+  ;
+
+  for (var _i=0; _i<_size; _i++) {
+    _offset = _i * len;
+    _ret[_i] = str.substring(_offset, _offset + len);
+  }
+
+  return _ret;
 }
