@@ -6,7 +6,7 @@ An easy to use, clean, pure javascript FileReader API wrapper.
 Add an icon to upload images to your HTML
 ```HTML
 	<html>
-		<!--- This looks like a camera --->
+		<!-- This looks like a camera -->
 		<div id="camerIcon"></div>	
 		<script src="filar.min.js">
 	</html>
