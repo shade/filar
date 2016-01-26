@@ -24,10 +24,21 @@ function Filar(options){
 };
 
 
+/*
+*	Filar	attachImage	-	allows an element to recieve image uploads
+*	
+*	@param	{String}	id	- the HTML id of the element
+*	@param	{Function}	callback	-	the callback
+*		@param	{JSON Object}	data
+*			@key	{String}	full	-	the full amount of base64 for resiszing
+*			@key	{JSON Object}	header	-	a header to upload it to the server
+*			@key	{Array}	chunks	-	a bunch of chunks
+*/
 
 
 
 
+Filar.prototype.attachImage	=	function(id,callbacks){
 
 
 
@@ -42,7 +53,6 @@ function Filar(options){
 
 //Every 3 bytes is encoded as 4 bytes of base64
 //Thus, the chunk size must be a multiple of 4
-Filar.prototype.attachImage	=	function(id,callbacks){
 	
 	var _element	=	document.getElementById(id);
 //	Create the file input 
