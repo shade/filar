@@ -9,10 +9,22 @@ var CLEARING_ID;
 
 var FILES_DIR	=	'/public/files/';
 
+var users	=	{
+	
+	
+	
+}
+
 
 io.on('connection',function(socket){
 	
-	socket.on('msg');
+	socket.on('msg',function(data){
+		if()
+		
+		io.sockets.emit('msg',{
+		
+		});
+	});
 	socket.on('img');
 	
 	socket.on('chunk',function(data){
