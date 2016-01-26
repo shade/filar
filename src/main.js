@@ -1,17 +1,47 @@
-
 /*
 	Filar v0.0.1
 	author: Joseph Thomas
 	Date:	Jan 17, 2016
 */
 
-//Every 3 bytes is encoded as 4 bytes of base64
-//Thus, the chunk size must be a multiple of 4
+
+
 var CHUNK_SIZE	=	3600;
-var Filar	=	function(options){
+
+/*
+*	Filar Constructor
+*	
+*	@param	{JSON Object}	options
+*		@key	{Integer}	maxSize	-	The max file size, uploadeable, need to check on server side too 
+*
+*	@return {Filar Object}
+*/
+
+function Filar(options){
 	this.maxSize	=	options.maxSize||10E6	//set the default max size as 10MB
+	
+	return this;
 };
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Every 3 bytes is encoded as 4 bytes of base64
+//Thus, the chunk size must be a multiple of 4
 Filar.prototype.attachImage	=	function(id,callbacks){
 	
 	var _element	=	document.getElementById(id);
