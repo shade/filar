@@ -1,5 +1,4 @@
-(function(window){
-	/*
+(function(window){/*
 	Filar v0.0.1
 	author: Joseph Thomas
 	Date:	Jan 17, 2016
@@ -62,9 +61,7 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 			//The reader has finished reading the files
 			_reader.onload	=	function(e){
 				
-				console.log(_this.chunk(_file,e.target.result	));
-				
-				//callbacks.done&&callbacks.done(e.target.result);
+				callbacks.done&&callbacks.done(_this.chunk(_file,e.target.result	));
 				
 			}
 			//Reader reads the file
