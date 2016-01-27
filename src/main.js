@@ -52,24 +52,26 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 	_input.addEventListener('change',function(){
 		
 		//This is not a multifile uploader
-		var _file	=	_input.files[0];
-		//And, this input is for images only!
-		if(_file.type.match('image.*')){
-			
-			//Create a reader
-			var _reader	=	new FileReader();
-			//The reader has finished reading the files
-			_reader.onload	=	function(e){
-				
-				callbacks.done&&callbacks.done(_this.chunk(_file,e.target.result	));
-				
+		[].forEach.call(_input.files,function(_file){
+			//And, this input is for images only!
+			if(_file.type.match('image.*')){
+
+				//Create a reader
+				var _reader	=	new FileReader();
+				//The reader has finished reading the files
+				_reader.onload	=	function(e){
+
+					callbacks.done&&callbacks.done(_this.chunk(_file,e.target.result	));
+
+				}
+				//Reader reads the file
+				_reader.readAsDataURL(_file);	
+			}else{
+	//			Tell the user it's not a real image
+				callbacks.error&&callbacks.error({code:1,error:'Not Image'});
 			}
-			//Reader reads the file
-			_reader.readAsDataURL(_file);
-		}else{
-//			Tell the user it's not a real image
-			callbacks.error&&callbacks.error({code:1,error:'Not Image'});
-		}
+		});
+		
 	});
 
 }
@@ -77,6 +79,7 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 Filar.prototype.setInput	=	function(input,element){
 	//	make sure the input has the basic properties
 	input.type	=	'file';
+	input.multiple	=	'true';
 	input.accept	=	"image/*";
 	
 	element.style.display	=	'none';	//this way any display based properties are in their % form

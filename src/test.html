@@ -33,12 +33,12 @@
 			click me!
 		</div>
 	</body>
-	<script src="../filar.min.js"></script>
+	<script src="./main.js"></script>
 	<script>
 		var filar	=	new Filar({});
 		filar.attachImage('uploadButton',{
-			done	:	function(){
-			
+			done	:	function(e){
+			console.log(e);
 			}
 		});
 
