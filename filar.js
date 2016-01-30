@@ -1,4 +1,5 @@
-(function(window){/*
+(function(window){
+	/*
 	Filar v0.0.1
 	author: Joseph Thomas
 	Date:	Jan 17, 2016
@@ -46,7 +47,7 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 	//The input is set to visible and set in front of the element. 
 	//So, people beleieve they're clicking on an image
 	var _input	=	document.createElement('input');
-	this.setInput(_input,_element);
+	this.setInput(_input,_element,true);
 
 	//When something changes, it means someone's tryna upload something
 	_input.addEventListener('change',function(){
@@ -93,7 +94,7 @@ Filar.prototype.attachFile	=	function(id,callbacks){
 	//The input is set to visible and set in front of the element. 
 	//So, people beleieve they're clicking on an image
 	var _input	=	document.createElement('input');
-	this.setInput(_input,_element);
+	this.setInput(_input,_element,false);
 
 	//When something changes, it means someone's tryna upload something
 	_input.addEventListener('change',function(){
@@ -116,11 +117,13 @@ Filar.prototype.attachFile	=	function(id,callbacks){
 
 }
 
-Filar.prototype.setInput	=	function(input,element){
+Filar.prototype.setInput	=	function(input,element,image){
 	//	make sure the input has the basic properties
 	input.type	=	'file';
 	input.multiple	=	'true';
-	input.accept	=	"image/*";
+	
+	//Only if this is an image input
+	image&&(input.accept	=	"image/*");
 	
 	element.style.display	=	'none';	//this way any display based properties are in their % form
 	//	make the input exactly the same as the element
@@ -189,5 +192,6 @@ function chunkString(str, len) {
 
   return _ret;
 }
+	
 	window.Filar	=	Filar;
 })(window);
