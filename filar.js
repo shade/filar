@@ -1,5 +1,4 @@
-(function(window){
-	/*
+(function(window){/*
 	Filar v0.0.1
 	author: Joseph Thomas
 	Date:	Jan 17, 2016
@@ -71,6 +70,46 @@ Filar.prototype.attachImage	=	function(id,callbacks){
 	//			Tell the user it's not a real image
 				callbacks.error&&callbacks.error({code:1,error:'Not Image'});
 			}
+		});
+		
+	});
+
+}
+/*
+*	Filar	attachFile	-	allows an element to recieve file uploads
+*	
+*	@param	{String}	id	- the HTML id of the element
+*	@param	{Function}	callback	-	the callback
+*		@param	{JSON Object}	data
+*			@key	{String}	full	-	the full amount of base64 for resiszing
+*			@key	{JSON Object}	header	-	a header to upload it to the server (see the objectfor more info)
+*			@key	{Array}	chunks	-	a bunch of chunks
+*/
+
+Filar.prototype.attachFile	=	function(id,callbacks){
+	var _this	=	this;
+	var _element	=	document.getElementById(id);
+
+	//The input is set to visible and set in front of the element. 
+	//So, people beleieve they're clicking on an image
+	var _input	=	document.createElement('input');
+	this.setInput(_input,_element);
+
+	//When something changes, it means someone's tryna upload something
+	_input.addEventListener('change',function(){
+		
+		//This is not a multifile uploader
+		[].forEach.call(_input.files,function(_file){
+			//Create a reader
+			var _reader	=	new FileReader();
+			//The reader has finished reading the files
+			_reader.onload	=	function(e){
+
+				callbacks.done&&callbacks.done(_this.chunk(_file,e.target.result	));
+
+			}
+			//Reader reads the file
+			_reader.readAsDataURL(_file);	
 		});
 		
 	});
@@ -150,6 +189,5 @@ function chunkString(str, len) {
 
   return _ret;
 }
-
 	window.Filar	=	Filar;
 })(window);
