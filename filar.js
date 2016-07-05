@@ -20,7 +20,7 @@ function Filar(options){
 	//Thus, the chunk size must be a multiple of 4
 
 	this.config = {
-		chunkSize: options.chunkSize
+		chunkSize: options.chunkSize||3000
 	};
 
 	return this;
