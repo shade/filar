@@ -6,13 +6,6 @@
 */
 
 
-
-//Every 3 bytes is encoded as 4 bytes of base64
-//Thus, the chunk size must be a multiple of 4
- 
-var CHUNK_SIZE = 3600;
-
-
 /*
 * Filar Constructor
 * 
@@ -23,6 +16,13 @@ var CHUNK_SIZE = 3600;
 
 function Filar(options){
 	this.maxSize = options.maxSize||10E6 //set the default max size as 10MB
+	//Every 3 bytes is encoded as 4 bytes of base64
+	//Thus, the chunk size must be a multiple of 4
+
+	this.config = {
+		chunkSize: options.chunkSize
+	};
+
 	return this;
 };
 
@@ -149,7 +149,7 @@ Filar.prototype.chunk = function(file,base64){
  	var _headerData = {
   		fileName: file.name,
   		fileSize: file.size,
-  		chunkSize: CHUNK_SIZE,
+  		chunkSize: this.config.chunkSize,
   		chunkAmount: 0,
   		fileType: file.type,
  		fileExtension: ""
